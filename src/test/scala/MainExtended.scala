@@ -10,12 +10,18 @@ object MainExtended extends App {
   println("evaluate(p) = " + evaluate(complex1))
   println("size(p) = " + size(complex1))
   println("depth(p) = " + depth(complex1))
-  println(toFormattedString(complex1))
+  println("\nComplex Expression 1:\n" + toFormattedString(complex1))
   println("q = " + complex2)
   println("evaluate(q) = " + evaluate(complex2))
   println("size(q) = " + size(complex2))
   println("depth(q) = " + depth(complex2))
-  println(toFormattedString(complex2))
+  println("\nComplex Expression 2:\n" + toFormattedString(complex2))
+
+  println("\nComplex Assignment:\n" + toFormattedString(complexAssignment2))
+  println("\nSimple Conditional:\n" + toFormattedString(simpleConditional))
+  println("\nComplex Conditional:\n" + toFormattedString(complexConditional))
+  println("\nBlock:\n" + toFormattedString(blockFixture))
+  println("\nLoop:\n" + toFormattedString(loopFixture))
 }
 
 class TestExtended extends FunSuite {
