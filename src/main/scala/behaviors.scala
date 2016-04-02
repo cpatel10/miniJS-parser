@@ -46,7 +46,7 @@ object behaviors {
     case Variable(i) => prefix + i
     case Assignment(l, r) =>buildExprString(prefix, "Assignment", toFormattedString(prefix + INDENT)(l), toFormattedString(prefix + INDENT)(r))
 
-    case Conditional(guard, ifBranch, elseBranch) => buildConditionalString(prefix, "Conditional", guard, ifBranch, elseBranch: Option[Expr])
+    case Conditional(guard, ifBranch, elseBranch) => buildConditionalString(prefix, "Conditional", guard, ifBranch, elseBranch:Option[Expr])
 
     case Loop(guard, body) => buildExprString(prefix, "Loop", toFormattedString(prefix + INDENT)(guard), toFormattedString(prefix + INDENT)(body))
     case Block(expressions@_*) => buildBlockString(prefix, "Block", expressions: _*)

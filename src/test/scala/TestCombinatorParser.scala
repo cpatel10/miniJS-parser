@@ -24,6 +24,9 @@ class TestCombinatorParser extends FunSuite {
   val parsedExpr9 = CombinatorParser.parseAll(CombinatorParser.statement, loopString1)
   val parsedExpr10 = CombinatorParser.parseAll(CombinatorParser.statement, loopString2)
   val parsedExpr11 = CombinatorParser.parseAll(CombinatorParser.statements, simpleStatementListString)
+  val parsedExpr12 = CombinatorParser.parseAll(CombinatorParser.statement, complexConditionalString)
+  val parsedExpr13 = CombinatorParser.parseAll(CombinatorParser.statement, complexConditional2String)
+
 
   test("parser works: complex1") { assert(parsedExpr.get === complex1) }
   test("parser works: complex2") { assert(parsedExpr2.get === complex1) }
@@ -36,5 +39,7 @@ class TestCombinatorParser extends FunSuite {
   test("parser works: loop1") { assert(parsedExpr9.get === loopFixture)}
   test("parser works: loop2") { assert(parsedExpr10.get === loopFixture)}
   test("parser works: simpleStatementList") { assert(parsedExpr11.get === simpleStatementList)}
+  test("parser works: complexConditional") { assert(parsedExpr12.get === complexConditional)}
+  test("parser works: complexConditional2") { assert(parsedExpr13.get === complexConditional2)}
 
 }
