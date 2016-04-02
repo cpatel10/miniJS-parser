@@ -32,8 +32,7 @@ object CombinatorParser extends JavaTokenParsers {
   )
 
   /** statements ::= statement* */
-  def statements: Parser[Expr] =
-    rep(statement) ^^ {case list => Statement(list:_*)}
+  def statements: Parser[List[Expr]] = rep(statement)
 
   /** statement   ::= expression ";" | assignment | conditional | loop | block */
   def statement: Parser[Expr] = (
@@ -42,6 +41,7 @@ object CombinatorParser extends JavaTokenParsers {
       | conditional ^^ { case c => c }
       | loop ^^ { case l => l }
       | block ^^ { case b => b }
+    //  | rep("+" ~> statement) ^^ {case list => Statement(list:_*)}
     )
 
 

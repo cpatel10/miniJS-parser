@@ -55,7 +55,7 @@ object TestFixtures {
   val simpleStatementListString = "x = 5 ; y = 7;"
 
   val simpleStatementList =
-    Statement(
+    List(
       Assignment(
         Variable("x"),
         Constant(5)

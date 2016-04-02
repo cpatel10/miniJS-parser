@@ -56,10 +56,8 @@ object behaviors {
   def buildExprString(prefix: String, nodeString: String, leftString: String, rightString: String) = {
     val result = new StringBuilder(prefix)
     result.append("(")
-    //result.append(EOL)
     result.append(leftString)
     result.append(" ")
-    //result.append(EOL)
     result.append(nodeString)
     result.append(" ")
     result.append(rightString)
@@ -71,7 +69,6 @@ object behaviors {
     val result = new StringBuilder(prefix)
     result.append(nodeString)
     result.append("(")
-    //result.append(EOL)
     result.append(exprString)
     result.append(")")
     result.toString
