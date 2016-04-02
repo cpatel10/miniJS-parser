@@ -39,6 +39,11 @@ object TestFixtures {
       ),
       Constant(5)
     );
+
+  val simpleVariableString = "x"
+
+  val simpleVariable = Variable("x")
+
   val simpleAssignmentString = "x = y;"
 
   val simpleAssignment = Assignment(
@@ -58,7 +63,7 @@ object TestFixtures {
           Constant(1),
           Variable("y2")
         ),
-        Plus(
+        Times(
           Constant(3),
           Variable("y4")
         )
@@ -68,8 +73,70 @@ object TestFixtures {
 
   val complexAssignment2String = "x = ((1 + y2) - (3 * y4)) / 5;"
 
-  val simpleVariableString = "x"
+  val complexAssignment2 =
+    Assignment(
+      Variable("x"),
+      Div(
+        Minus(
+          Plus(
+            Constant(1),
+            Variable("y2")
+          ),
+          Times(
+            Constant(3),
+            Variable("y4")
+          )
+        ),
+        Constant(5)
+      )
+    )
 
-  val simpleVariable = Variable("x")
+  val simpleConditionalString = "if (1) { x = 2; }"
+
+  val simpleConditional =
+    Conditional(
+      Constant(1),
+      Assignment(
+        Variable("x"),
+        Constant(2)
+      )
+    )
+
+  val complexConditionalString = "if (1) { x = 2; } else { x = 3; }"
+
+  val complexConditional =
+    Conditional(
+      Constant(1),
+      Assignment(
+        Variable("x"),
+        Constant(2)
+      ),
+      Some(Assignment(
+        Variable("x"),
+        Constant(3)
+      ))
+    )
+
+  val blockString = "{ r = r + x; y = y + 1 ; }"
+
+  val block =
+    Block(
+      Assignment(
+        Variable("r"),
+        Plus(
+          Variable("r"),
+          Variable("x")
+        )
+      ),
+      Assignment(
+        Variable("y"),
+        Plus(
+          Variable("y"),
+          Constant(1)
+        )
+      )
+    )
+
+
 
 }
