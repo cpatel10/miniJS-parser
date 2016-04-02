@@ -19,16 +19,20 @@ class TestCombinatorParser extends FunSuite {
   val parsedExpr4 = CombinatorParser.parseAll(CombinatorParser.statement, simpleAssignmentString)
   val parsedExpr5 = CombinatorParser.parseAll(CombinatorParser.statement, complexExpressionString)
   val parsedExpr6 = CombinatorParser.parseAll(CombinatorParser.statement, complexAssignment2String)
-  val parsedExpr7 = CombinatorParser.parseAll(CombinatorParser.statement, simpleConditionalString)
+  //val parsedExpr7 = CombinatorParser.parseAll(CombinatorParser.statement, simpleConditionalString)
   val parsedExpr8 = CombinatorParser.parseAll(CombinatorParser.statement, blockString)
+  val parsedExpr9 = CombinatorParser.parseAll(CombinatorParser.statement, loopString1)
+  val parsedExpr10 = CombinatorParser.parseAll(CombinatorParser.statement, loopString2)
 
-  test("parser works 1") { assert(parsedExpr.get === complex1) }
-  test("parser works 2") { assert(parsedExpr2.get === complex1) }
-  test("parser works 3") { assert(parsedExpr3.get === simpleVariable)}
-  test("parser works 4") { assert(parsedExpr4.get === simpleAssignment)}
-  test("parser works 5") { assert(parsedExpr5.get === complexExpression)}
-  test("parser works 6") { assert(parsedExpr6.get === complexAssignment2)}
-  test("parser works 7") { assert(parsedExpr7.get === simpleConditional)}
-  test("parser works 8") { assert(parsedExpr8.get === block)}
+  test("parser works: complex1") { assert(parsedExpr.get === complex1) }
+  test("parser works: complex2") { assert(parsedExpr2.get === complex1) }
+  test("parser works: simpleVariable") { assert(parsedExpr3.get === simpleVariable)}
+  test("parser works: simpleAssignment") { assert(parsedExpr4.get === simpleAssignment)}
+  test("parser works: complexExpression") { assert(parsedExpr5.get === complexExpression)}
+  test("parser works: complexAssignment2") { assert(parsedExpr6.get === complexAssignment2)}
+  //test("parser works: simpleConditional") { assert(parsedExpr7.get === simpleConditional)}
+  test("parser works: block") { assert(parsedExpr8.get === blockFixture)}
+  test("parser works: loop1") { assert(parsedExpr9.get === loopFixture)}
+  test("parser works: loop2") { assert(parsedExpr10.get === loopFixture)}
 
 }

@@ -96,9 +96,11 @@ object TestFixtures {
   val simpleConditional =
     Conditional(
       Constant(1),
-      Assignment(
-        Variable("x"),
-        Constant(2)
+      Block(
+        Assignment(
+          Variable("x"),
+          Constant(2)
+        )
       )
     )
 
@@ -107,19 +109,23 @@ object TestFixtures {
   val complexConditional =
     Conditional(
       Constant(1),
-      Assignment(
-        Variable("x"),
-        Constant(2)
+      Block(
+        Assignment(
+          Variable("x"),
+          Constant(2)
+        )
       ),
-      Some(Assignment(
-        Variable("x"),
-        Constant(3)
+      Some(Block(
+        Assignment(
+          Variable("x"),
+          Constant(3)
+        )
       ))
     )
 
   val blockString = "{ r = r + x; y = y + 1 ; }"
 
-  val block =
+  val blockFixture =
     Block(
       Assignment(
         Variable("r"),
@@ -133,6 +139,54 @@ object TestFixtures {
         Plus(
           Variable("y"),
           Constant(1)
+        )
+      )
+    )
+
+  val complexConditional2String = "if (4) { r = r + x; y = y + 1; }"
+
+  val complexConditional2 =
+    Conditional(
+      Constant(4),
+      Block(
+        Assignment(
+          Variable("r"),
+          Plus(
+            Variable("r"),
+            Variable("x")
+          )
+        ),
+        Assignment(
+          Variable("y"),
+          Plus(
+            Variable("y"),
+            Constant(1)
+          )
+        )
+      )
+    )
+
+  val loopString1 = "while (y) { r = r + x;  y = y - 1; }"
+
+  val loopString2 = "while (y) {\n  r = r + x \n; y = y - 1 ;\n}"
+
+  val loopFixture =
+    Loop(
+      Variable("y"),
+      Block(
+        Assignment(
+          Variable("r"),
+          Plus(
+            Variable("r"),
+            Variable("x")
+          )
+        ),
+        Assignment(
+          Variable("y"),
+          Minus(
+            Variable("y"),
+            Constant(1)
+          )
         )
       )
     )
