@@ -52,7 +52,19 @@ object TestFixtures {
     //Constant(5)
   );
 
-  val complexAssignmentString = "x = 5 ; y = 7;"
+  val simpleStatementListString = "x = 5 ; y = 7;"
+
+  val simpleStatementList =
+    Statement(
+      Assignment(
+        Variable("x"),
+        Constant(5)
+      ),
+      Assignment(
+        Variable("y"),
+        Constant(7)
+      )
+    )
 
   val complexExpressionString = "((1 + y2) - (3 * y4)) / 5;"
 
