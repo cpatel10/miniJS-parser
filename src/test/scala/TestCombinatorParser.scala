@@ -19,12 +19,12 @@ class TestCombinatorParser extends FunSuite {
   val parsedExpr4 = CombinatorParser.parseAll(CombinatorParser.statement, simpleAssignmentString)
   val parsedExpr5 = CombinatorParser.parseAll(CombinatorParser.statement, complexExpressionString)
   val parsedExpr6 = CombinatorParser.parseAll(CombinatorParser.statement, complexAssignment2String)
-  val parsedExpr7 = CombinatorParser.parseAll(CombinatorParser.conditional, simpleConditionalString)
+  val parsedExpr7 = CombinatorParser.parseAll(CombinatorParser.statement, simpleConditionalString)
   val parsedExpr8 = CombinatorParser.parseAll(CombinatorParser.statement, blockString)
-  val parsedExpr9 = CombinatorParser.parseAll(CombinatorParser.loop, loopString1)
+  val parsedExpr9 = CombinatorParser.parseAll(CombinatorParser.statement, loopString1)
   val parsedExpr10 = CombinatorParser.parseAll(CombinatorParser.statement, loopString2)
   val parsedExpr11 = CombinatorParser.parseAll(CombinatorParser.statements, simpleStatementListString)
-  val parsedExpr12 = CombinatorParser.parseAll(CombinatorParser.conditional, complexConditionalString)
+  val parsedExpr12 = CombinatorParser.parseAll(CombinatorParser.statement, complexConditionalString)
   val parsedExpr13 = CombinatorParser.parseAll(CombinatorParser.statement, complexConditional2String)
 
 

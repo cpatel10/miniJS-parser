@@ -35,33 +35,25 @@ object CombinatorParser extends JavaTokenParsers {
   def statements: Parser[List[Expr]] = rep(statement)
 
   /** statement   ::= expression ";" | assignment | conditional | loop | block */
-  def statement: Parser[Expr] = (
-    expr <~ ";" ^^ { case e => e }
-      | assignment ^^ { case a => a }
-      | conditional ^^ { case c => c }
-      | loop ^^ { case l => l }
-      | block ^^ { case b => b }
-    //  | rep("+" ~> statement) ^^ {case list => Statement(list:_*)}
-    )
-
+  def statement: Parser[Expr] = expr <~ ";" | assignment | conditional | loop | block
 
   /** assignment  ::= ident "=" expression ";" */
   def assignment: Parser[Expr] =
-    ident ~! "=" ~ expr ~ ";" ^^ {
+    ident ~ "=" ~ expr ~ ";" ^^ {
       case i ~ "=" ~ e ~ ";"  => Assignment(Variable(i), e)
     }
 
   /** conditional ::= "if" "(" expression ")" block [ "else" block ] */
   def conditional: Parser[Expr] =
-    "if" ~ "(" ~ expr ~ ")" ~ block ~ opt( "else" ~ block ) ^^ {
-      case _~ _~ guard ~ _ ~ ifBranch ~ None => Conditional(guard, ifBranch)
-      case _~ _~ guard ~ _ ~ ifBranch ~ Some(_ ~ elseBranch) => Conditional(guard, ifBranch, Some(elseBranch))
+    "if" ~ "(" ~> expr ~ ")" ~ block ~ opt( "else" ~ block ) ^^ {
+      case  guard ~ _ ~ ifBranch ~ None => Conditional(guard, ifBranch)
+      case  guard ~ _ ~ ifBranch ~ Some(_ ~ elseBranch) => Conditional(guard, ifBranch, Some(elseBranch))
     }
 
   /** loop ::= "while" "(" expression ")" block */
   def loop: Parser[Expr] =
-    "while" ~ "(" ~ expr ~ ")" ~ block ^^ {
-      case _~ _~ guard ~ _ ~ body => Loop(guard, body)
+    "while" ~ "(" ~> expr ~ ")" ~ block ^^ {
+      case  guard ~ _ ~ body => Loop(guard, body)
     }
 
   /** block ::= "{" statement* "}" */
