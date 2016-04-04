@@ -46,12 +46,20 @@ object behaviors {
     case Variable(i) => prefix + i
     case Assignment(l, r) => buildAssignmentString(prefix, "=", toFormattedString(prefix)(l), toFormattedString(prefix)(r))
     case Conditional(guard, ifBranch, elseBranch) => buildConditionalString(prefix, "if", guard, ifBranch, elseBranch:Option[Expr])
-
     case Loop(guard, body) => buildLoopString(prefix, "while", toFormattedString(prefix)(guard), toFormattedString(prefix)(body))
     case Block(expressions@_*) => buildBlockString(prefix, expressions: _*)
   }
 
   def toFormattedString(e: Expr): String = toFormattedString("")(e)
+
+  def toFormattedString(e: List[Expr]): String = {
+    val result = new StringBuilder("").append("{").append(EOL)
+    e.foreach((ex: Expr) => {
+      result.append(toFormattedString(ex))
+    })
+    result.append("}")
+    result.toString
+  }
 
   def buildExprString(prefix: String, nodeString: String, leftString: String, rightString: String) = {
     val result = new StringBuilder(prefix)
@@ -101,7 +109,7 @@ object behaviors {
   def buildBlockString(prefix: String, expressions: Expr*) = {
     val result = new StringBuilder(prefix).append("{").append(EOL)
     result.append(expressions.map(expr => INDENT + toFormattedString(prefix)(expr)).mkString(""))
-    result.append("}")
+    result.append("}").append(EOL)
     result.toString
   }
 

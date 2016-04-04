@@ -1,4 +1,4 @@
-A simple expression evaluator in Scala. 
+A front end (lexical analysis and syntax analysis) for a Scala-based interpreter/REPL for the simple imperative language MiniJS
 Includes two types of parsers:
 
 - [Scala parser combinators](http://www.scala-lang.org/api/current/scala-parser-combinators/#scala.util.parsing.combinator.Parsers)
@@ -8,9 +8,11 @@ To run the tests:
 
       sbt test
 
-To run either of the calculator examples:
+To run minijs REPL:
 
       sbt run
+      
+      choose [1] CombinatorCalculator
 
 To run either of the test examples:
 
