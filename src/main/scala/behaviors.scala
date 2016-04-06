@@ -83,7 +83,7 @@ object behaviors {
   }
 
   def buildAssignmentString(prefix: String, nodeString: String, leftString: String, rightString: String) = {
-    val result = new StringBuilder(prefix)
+    val result = new StringBuilder(INDENT+prefix)
     result.append(leftString)
     result.append(" ")
     result.append(nodeString)
@@ -96,10 +96,12 @@ object behaviors {
 
   def buildConditionalString(prefix: String, nodeString: String, guard: Expr, ifBranch: Expr, elseBranch: Option[Expr]) = {
     val result = new StringBuilder(prefix).append(nodeString).append(" (")
-    result.append(toFormattedString(prefix)(guard))
+    result.append(toFormattedString(prefix )(guard))
     result.append(") ")
+
     result.append(toFormattedString(prefix)(ifBranch))
     elseBranch.foreach((block: Expr) => {
+
       result.append("else ")
       result.append(toFormattedString(prefix)(block))
     })
@@ -109,7 +111,7 @@ object behaviors {
   def buildBlockString(prefix: String, expressions: Expr*) = {
     val result = new StringBuilder(prefix).append("{").append(EOL)
     result.append(expressions.map(expr => INDENT + toFormattedString(prefix)(expr)).mkString(""))
-    result.append("}").append(EOL)
+    result.append(INDENT+ "}").append(EOL)
     result.toString
   }
 
