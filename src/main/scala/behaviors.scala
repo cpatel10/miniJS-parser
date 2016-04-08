@@ -97,7 +97,7 @@ object behaviors {
   def buildConditionalString(prefix: String, nodeString: String, guard: Expr, ifBranch: Expr, elseBranch: Option[Expr]) = {
     val result = new StringBuilder(prefix).append(nodeString).append(" (")
     result.append(toFormattedString(prefix )(guard))
-    result.append(") ")
+    result.append(")")
 
     result.append(toFormattedString(prefix)(ifBranch))
     elseBranch.foreach((block: Expr) => {
