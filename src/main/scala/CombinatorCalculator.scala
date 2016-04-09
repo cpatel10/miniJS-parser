@@ -24,6 +24,7 @@ object CombinatorCalculator extends App {
   console.setPrompt("minijs> ")
   println("Enter the statements and press <enter> to parse your input or <quit> to quit:")
 
+
   if (args.length > 0) {
     processExpr(args mkString " ")
   }

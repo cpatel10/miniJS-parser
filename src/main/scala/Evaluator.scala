@@ -5,6 +5,18 @@ import edu.luc.cs.laufer.cs473.expressions.ast._
 import scala.collection.mutable
 import scala.util.Try
 
+
+trait Value[T] {
+  def get: T
+  def set(value:T):Value[T]
+}
+
+/** A run-time value is always a number for now. We represent NULL as 0. */
+case class Num(var value:Int) extends Value[Int] {
+  def get:Int=value
+  def set(value:Int)= {this.value=value;this}
+}
+
 /** Something that can be used on the right-hand side of an assignment. */
 trait RValue[T] {
   def get: T
@@ -23,48 +35,50 @@ case class Cell[T](var value: T) extends LValue[T] {
 
 /** A companion object defining a useful Cell instance. */
 object Cell {
-  val NULL = Cell(0)
+  val NULL = Cell(Num(0))
 }
 
 object Evaluator {
 
-  type Store = mutable.Map[String, LValue[Int]]
+  type Store = mutable.Map[String, LValue[Value[Int]]]
+  private val store: Store = mutable.Map[String, LValue[Value[Int]]]()
 
 
-  def evaluate(store: Store)(expr: Expr): LValue[Int] = expr match {
-    case Constant(value) => Cell(value)
-    case Plus(left, right) => Cell(evaluate(store)(left).get + evaluate(store)(right).get)
-    case Minus(left, right) => Cell(evaluate(store)(left).get - evaluate(store)(right).get)
-    case Times(left, right) => Cell(evaluate(store)(left).get * evaluate(store)(right).get)
-    case Div(left, right) => Cell(evaluate(store)(left).get / evaluate(store)(right).get)
-    case Mod(left, right) => Cell(evaluate(store)(left).get % evaluate(store)(right).get)
+  def evaluate(expr: Expr): Try[Value[Int]] = { Try (evaluate(store)(expr)) }
+
+  def evaluate(store: Store)(expr: Expr): Value[Int] = expr match {
+    case Constant(value) => Num(value)
+    case Plus(left, right) => Num(evaluate(store)(left).get + evaluate(store)(right).get)
+    case Minus(left, right) => Num(evaluate(store)(left).get - evaluate(store)(right).get)
+    case Times(left, right) => Num(evaluate(store)(left).get * evaluate(store)(right).get)
+    case Div(left, right) => Num(evaluate(store)(left).get / evaluate(store)(right).get)
+    case Mod(left, right) => Num(evaluate(store)(left).get % evaluate(store)(right).get)
 
     case Variable(i) => {
       val ivalue = store.get(i)
-      if (ivalue.isDefined) Cell(ivalue.get.get)
-      else Cell(0)
+      if (ivalue.isDefined) ivalue.get.get
+      else throw new NoSuchFieldException(i)
     }
 
-    case Assignment(left, right) => left match {
-      case Variable(i) => {
+    case Assignment(left, right) => {
+        val lvalue = Try(evaluate(store)(left)).getOrElse(Num(0))
         val rvalue = evaluate(store)(right)
-        val lvalue = evaluate(store)(left)
-        store(i) = lvalue.set(rvalue.get)
-        store(i)
-      }
+        store(left.variable) = Cell(lvalue.set(rvalue.get))
+        Cell.NULL.get
+
     }
 
-    case Conditional(guard, ifBranch, elseBranch: Option[Expr]) => {
-      val gvalue = evaluate(store)(guard)
-      if (gvalue.get != 0) {
-        evaluate(store)(ifBranch)
-      }
-//      else {
-//
-//
+//    case Conditional(guard, ifBranch, elseBranch: Option[Expr]) => {
+//      val gvalue = evaluate(store)(guard)
+//      if (gvalue.get != 0) {
+//        evaluate(store)(ifBranch)
 //      }
-      Cell.NULL
-    }
+////      else {
+////
+////
+////      }
+//      Cell.NULL
+//    }
 
     case Loop(guard, body) => {
       var gvalue = evaluate(store)(guard)
@@ -72,11 +86,11 @@ object Evaluator {
         evaluate(store)(body)
         gvalue = evaluate(store)(guard)
       }
-      Cell.NULL
+      Cell.NULL.get
     }
 
     case Block(exprs @ _*) =>{
-       exprs.foldLeft(Cell.NULL.asInstanceOf[LValue[Int]])((c: LValue[Int], s: Expr) => evaluate(store)(s))
+       exprs.foldLeft(Cell.NULL.get.asInstanceOf[Value[Int]])((c: Value[Int], s: Expr) => evaluate(store)(s))
    }
   }
 }
