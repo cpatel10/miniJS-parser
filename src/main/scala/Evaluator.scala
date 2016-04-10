@@ -73,17 +73,15 @@ object Evaluator {
 
     }
 
-//    case Conditional(guard, ifBranch, elseBranch: Option[Expr]) => {
-//      val gvalue = evaluate(store)(guard)
-//      if (gvalue.get != 0) {
-//        evaluate(store)(ifBranch)
-//      }
-////      else {
-////
-////
-////      }
-//      Cell.NULL
-//    }
+    case Conditional(guard, ifBranch, elseBranch: Option[Statement]) => {
+      val gvalue = evaluate(store)(guard)
+      if (gvalue.get != 0) {
+        evaluate(store)(ifBranch)
+      }
+      else {
+        elseBranch.foldLeft(Cell.NULL.get.asInstanceOf[Value[Int]])((c: Value[Int], s: Statement) => evaluate(store)(s))
+      }
+    }
 
     case Loop(guard, body) => {
       var gvalue = evaluate(store)(guard)
@@ -94,8 +92,8 @@ object Evaluator {
       Cell.NULL.get
     }
 
-    case Block(exprs @ _*) =>{
-       exprs.foldLeft(Cell.NULL.get.asInstanceOf[Value[Int]])((c: Value[Int], s: Statement) => evaluate(store)(s))
+    case Block(expressions @ _*) =>{
+       expressions.foldLeft(Cell.NULL.get.asInstanceOf[Value[Int]])((c: Value[Int], s: Statement) => evaluate(store)(s))
    }
   }
 }

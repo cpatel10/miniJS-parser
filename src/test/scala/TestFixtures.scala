@@ -203,6 +203,45 @@ object TestFixtures {
       )
     )
 
+   val simpleWhileString= "x = 2; y = 3; r = 0; while (y) { r = r + x ; y = y - 1; }"
+
+
+  val simpleWhile =
+    Block(
+      Assignment(
+        Variable("x"),
+        Constant(2)
+
+      ),
+      Assignment(
+        Variable("y"),
+        Constant(3)
+
+      ),
+      Assignment(
+        Variable("r"),
+        Constant(0)
+
+      ),
+      Loop(
+        Variable("y"),
+        Block(
+          Assignment(
+            Variable("r"),
+            Plus(
+              Variable("r"),
+              Variable("x")
+            )
+          ),
+          Assignment(
+            Variable("y"),
+            Minus(
+              Variable("y"),
+              Constant(1)
+            )
+          )
+        )
+      ))
 
 
 }

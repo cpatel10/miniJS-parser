@@ -3,9 +3,7 @@ import TestFixtures._
 import org.scalatest.FunSuite
 import scala.util.Success
 
-/**
-  * Created by Chingari on 4/8/2016.
-  */
+
 class TestEvaluator extends FunSuite {
 
   test("evaluate twoAssignments") {
@@ -20,5 +18,57 @@ class TestEvaluator extends FunSuite {
     assert(result === Success(Num(5)))
     assert(Evaluator.store.get("x").get === Cell(Num(5)))
   }
+
+  test("evaluate complexAssignment2") {
+    val result = Evaluator.evaluate(complexAssignment2)
+    val exception = intercept[java.lang.NoSuchFieldException] {
+      result.get
+    }
+    assert(exception.getMessage === "y2")
+  }
+
+  test("evaluate simpleConditional") {
+    val result = Evaluator.evaluate(simpleConditional)
+    assert(result === Success(Num(0)))
+    assert(Evaluator.store.get("x").get === Cell(Num(2)))
+  }
+
+  test("evaluate complexConditional") {
+    val result = Evaluator.evaluate(complexConditional)
+    assert(result === Success(Num(0)))
+    assert(Evaluator.store.get("x").get === Cell(Num(2)))
+  }
+  test("evaluate BlockFixture") {
+    val result = Evaluator.evaluate(blockFixture)
+    val exception = intercept[java.lang.NoSuchFieldException] {
+      result.get
+    }
+    assert(exception.getMessage === "r")
+  }
+
+  test("parser complexConditional2") {
+    val result = Evaluator.evaluate(complexConditional2)
+    val exception = intercept[java.lang.NoSuchFieldException] {
+      result.get
+    }
+    assert(exception.getMessage === "r")
+  }
+
+  test("evaluate loopFixture") {
+    val result = Evaluator.evaluate(loopFixture)
+    val exception = intercept[java.lang.NoSuchFieldException] {
+      result.get
+    }
+    assert(exception.getMessage === "r")
+  }
+
+  test("evaluate simpleWhile"){
+  val result = Evaluator.evaluate(simpleWhile)
+  assert(result == Success(Num(0)))
+  assert(Evaluator.store.get("x").get === Cell(Num(2)))
+  assert(Evaluator.store.get("y").get === Cell(Num(0)))
+  assert(Evaluator.store.get("r").get === Cell(Num(6)))
+}
+
 
 }
