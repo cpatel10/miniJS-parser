@@ -48,7 +48,6 @@ object Evaluator {
     evaluatedStatements.lastOption.getOrElse(Try(Num(0)))
   }
 
-
   def evaluate(expr: Statement): Try[Value[Int]] = { Try (evaluate(store)(expr)) }
 
   def evaluate(store: Store)(expr: Statement): Value[Int] = expr match {
@@ -77,9 +76,12 @@ object Evaluator {
       val gvalue = evaluate(store)(guard)
       if (gvalue.get != 0) {
         evaluate(store)(ifBranch)
-      }
-      else {
-        elseBranch.foldLeft(Cell.NULL.get.asInstanceOf[Value[Int]])((c: Value[Int], s: Statement) => evaluate(store)(s))
+      } else {
+        if (elseBranch.isDefined) {
+          evaluate(store)(elseBranch.get)
+        } else {
+          Cell.NULL.get
+        }
       }
     }
 
