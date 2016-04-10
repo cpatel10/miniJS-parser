@@ -4,7 +4,7 @@ import ast._
 
 object behaviors {
 
-  def evaluate(e: Expr): Int = e match {
+  def evaluate(e: Statement): Int = e match {
     case Constant(c) => c
     case UMinus(r)   => -evaluate(r)
     case Plus(l, r)  => evaluate(l) + evaluate(r)
@@ -14,7 +14,7 @@ object behaviors {
     case Mod(l, r)   => evaluate(l) % evaluate(r)
   }
 
-  def size(e: Expr): Int = e match {
+  def size(e: Statement): Int = e match {
     case Constant(c) => 1
     case UMinus(r)   => 1 + size(r)
     case Plus(l, r)  => 1 + size(l) + size(r)
@@ -24,7 +24,7 @@ object behaviors {
     case Mod(l, r)   => 1 + size(l) + size(r)
   }
 
-  def depth(e: Expr): Int = e match {
+  def depth(e: Statement): Int = e match {
     case Constant(c) => 1
     case UMinus(r)   => 1 + depth(r)
     case Plus(l, r)  => 1 + math.max(depth(l), depth(r))
@@ -34,8 +34,8 @@ object behaviors {
     case Mod(l, r)   => 1 + math.max(depth(l), depth(r))
   }
 
-  def toFormattedString(prefix: String)(e: Expr): String = e match {
-    case Constant(c) => prefix + c.toString
+  def toFormattedString(prefix: String)(e: Statement): String = e match {
+    case Constant(c) => c.toString
     case UMinus(r)   => buildUnaryExprString(prefix, "-", toFormattedString(prefix)(r))
     case Plus(l, r)  => buildExprString(prefix, "+", toFormattedString(prefix)(l), toFormattedString(prefix)(r))
     case Minus(l, r) => buildExprString(prefix, "-", toFormattedString(prefix)(l), toFormattedString(prefix)(r))
@@ -43,26 +43,26 @@ object behaviors {
     case Div(l, r)   => buildExprString(prefix, "/", toFormattedString(prefix)(l), toFormattedString(prefix)(r))
     case Mod(l, r)   => buildExprString(prefix, "%", toFormattedString(prefix)(l), toFormattedString(prefix)(r))
 
-    case Variable(i) => prefix + i
+    case Variable(i) => i
     case Assignment(l, r) => buildAssignmentString(prefix, "=", toFormattedString(prefix)(l), toFormattedString(prefix)(r))
-    case Conditional(guard, ifBranch, elseBranch) => buildConditionalString(prefix, "if", guard, ifBranch, elseBranch:Option[Expr])
+    case Conditional(guard, ifBranch, elseBranch) => buildConditionalString(prefix, "if", guard, ifBranch, elseBranch:Option[Statement])
     case Loop(guard, body) => buildLoopString(prefix, "while", toFormattedString(prefix)(guard), toFormattedString(prefix)(body))
     case Block(expressions@_*) => buildBlockString(prefix, expressions: _*)
   }
 
-  def toFormattedString(e: Expr): String = toFormattedString("")(e)
+  def toFormattedString(e: Statement): String = toFormattedString("")(e)
 
-  def toFormattedString(e: List[Expr]): String = {
+  def toFormattedString(e: List[Statement]): String = {
     val result = new StringBuilder("").append("{").append(EOL)
-    e.foreach((ex: Expr) => {
-      result.append(toFormattedString(ex))
+    e.foreach((ex: Statement) => {
+      result.append(toFormattedString(INDENT)(ex))
     })
     result.append("}")
     result.toString
   }
 
   def buildExprString(prefix: String, nodeString: String, leftString: String, rightString: String) = {
-    val result = new StringBuilder(prefix)
+    val result = new StringBuilder()
     result.append("(")
     result.append(leftString)
     result.append(" ")
@@ -74,7 +74,7 @@ object behaviors {
   }
 
   def buildUnaryExprString(prefix: String, nodeString: String, exprString: String) = {
-    val result = new StringBuilder(prefix)
+    val result = new StringBuilder()
     result.append(nodeString)
     result.append("(")
     result.append(exprString)
@@ -83,7 +83,7 @@ object behaviors {
   }
 
   def buildAssignmentString(prefix: String, nodeString: String, leftString: String, rightString: String) = {
-    val result = new StringBuilder(INDENT+prefix)
+    val result = new StringBuilder(prefix)
     result.append(leftString)
     result.append(" ")
     result.append(nodeString)
@@ -94,13 +94,13 @@ object behaviors {
     result.toString
   }
 
-  def buildConditionalString(prefix: String, nodeString: String, guard: Expr, ifBranch: Expr, elseBranch: Option[Expr]) = {
+  def buildConditionalString(prefix: String, nodeString: String, guard: Statement, ifBranch: Statement, elseBranch: Option[Statement]) = {
     val result = new StringBuilder(prefix).append(nodeString).append(" (")
     result.append(toFormattedString(prefix )(guard))
     result.append(")")
 
     result.append(toFormattedString(prefix)(ifBranch))
-    elseBranch.foreach((block: Expr) => {
+    elseBranch.foreach((block: Statement) => {
 
       result.append("else ")
       result.append(toFormattedString(prefix)(block))
@@ -108,10 +108,10 @@ object behaviors {
     result.toString
   }
 
-  def buildBlockString(prefix: String, expressions: Expr*) = {
+  def buildBlockString(prefix: String, expressions: Statement*) = {
     val result = new StringBuilder(prefix).append("{").append(EOL)
-    result.append(expressions.map(expr => INDENT + toFormattedString(prefix)(expr)).mkString(""))
-    result.append(INDENT+ "}").append(EOL)
+    result.append(expressions.map(expr => prefix + INDENT + toFormattedString(prefix)(expr)).mkString(""))
+    result.append(prefix+ "}").append(EOL)
     result.toString
   }
 

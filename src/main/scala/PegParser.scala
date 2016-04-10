@@ -10,29 +10,29 @@ class PegParser(val input: ParserInput) extends Parser {
   /** expression ::= term { { "+" | "-" } term }* */
   def Expression = rule {
     Term ~ zeroOrMore(
-      ws('+') ~ Term ~> (Plus(_: Expr, _))
-    | ws('-') ~ Term ~> (Minus(_: Expr, _))
+      ws('+') ~ Term ~> (Plus(_: Statement, _))
+    | ws('-') ~ Term ~> (Minus(_: Statement, _))
     )
   }
 
   /** term ::= factor { { "*" | "/" | "%" } factor }* */
   def Term = rule {
     Factor ~ zeroOrMore(
-      ws('*') ~ Factor ~> (Times(_: Expr, _))
-    | ws('/') ~ Factor ~> (Div(_: Expr, _))
-    | ws('%') ~ Factor ~> (Mod(_: Expr, _))
+      ws('*') ~ Factor ~> (Times(_: Statement, _))
+    | ws('/') ~ Factor ~> (Div(_: Statement, _))
+    | ws('%') ~ Factor ~> (Mod(_: Statement, _))
     )
   }
 
   /** factor ::= number | "+" factor | "-" factor | "(" expression ")" */
-  def Factor: Rule1[Expr] = rule { Number | UnaryPlus | UnaryMinus | Parens }
+  def Factor: Rule1[Statement] = rule { Number | UnaryPlus | UnaryMinus | Parens }
 
   // explicitly handle trailing whitespace
   def Number = rule { capture(Digits) ~ WhiteSpace ~> ((s: String) => Constant(s.toInt)) }
 
   def UnaryPlus = rule { ws('+') ~ Factor }
 
-  def UnaryMinus = rule { ws('-') ~ Factor ~> (UMinus(_: Expr)) }
+  def UnaryMinus = rule { ws('-') ~ Factor ~> (UMinus(_: Statement)) }
 
   def Parens = rule { ws('(') ~ Expression ~ ws(')') }
 

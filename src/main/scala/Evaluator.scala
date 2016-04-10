@@ -41,12 +41,17 @@ object Cell {
 object Evaluator {
 
   type Store = mutable.Map[String, LValue[Value[Int]]]
-  private val store: Store = mutable.Map[String, LValue[Value[Int]]]()
+  val store: Store = mutable.Map[String, LValue[Value[Int]]]()
+
+  def evaluate(statements: List[Statement]): Try[Value[Int]] = {
+    val evaluatedStatements = statements.map(evaluate(_))
+    evaluatedStatements.lastOption.getOrElse(Try(Num(0)))
+  }
 
 
-  def evaluate(expr: Expr): Try[Value[Int]] = { Try (evaluate(store)(expr)) }
+  def evaluate(expr: Statement): Try[Value[Int]] = { Try (evaluate(store)(expr)) }
 
-  def evaluate(store: Store)(expr: Expr): Value[Int] = expr match {
+  def evaluate(store: Store)(expr: Statement): Value[Int] = expr match {
     case Constant(value) => Num(value)
     case Plus(left, right) => Num(evaluate(store)(left).get + evaluate(store)(right).get)
     case Minus(left, right) => Num(evaluate(store)(left).get - evaluate(store)(right).get)
@@ -90,7 +95,7 @@ object Evaluator {
     }
 
     case Block(exprs @ _*) =>{
-       exprs.foldLeft(Cell.NULL.get.asInstanceOf[Value[Int]])((c: Value[Int], s: Expr) => evaluate(store)(s))
+       exprs.foldLeft(Cell.NULL.get.asInstanceOf[Value[Int]])((c: Value[Int], s: Statement) => evaluate(store)(s))
    }
   }
 }

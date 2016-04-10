@@ -17,12 +17,17 @@ object CombinatorCalculator extends App {
       println(expr)
       println("The unparsed statements are: ")
       println(toFormattedString(expr))
+      print("It evaluates to ")
+      val eval = Evaluator.evaluate(expr)
+      println(eval)
+      println("Memory: " + Evaluator.store)
     }
   }
 
   val console = new ConsoleReader()
   console.setPrompt("minijs> ")
   println("Enter the statements and press <enter> to parse your input or <quit> to quit:")
+  println("Memory: " + Evaluator.store)
 
 
   if (args.length > 0) {

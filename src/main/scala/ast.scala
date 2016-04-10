@@ -1,17 +1,17 @@
 package edu.luc.cs.laufer.cs473.expressions.ast
 
 /** An initial algebra of arithmetic expressions. */
-sealed trait Expr
-case class Constant(value: Int) extends Expr
-case class UMinus(expr: Expr) extends Expr
-case class Plus(left: Expr, right: Expr) extends Expr
-case class Minus(left: Expr, right: Expr) extends Expr
-case class Times(left: Expr, right: Expr) extends Expr
-case class Div(left: Expr, right: Expr) extends Expr
-case class Mod(left: Expr, right: Expr) extends Expr
+sealed trait Statement
+case class Constant(value: Int) extends Statement
+case class UMinus(expr: Statement) extends Statement
+case class Plus(left: Statement, right: Statement) extends Statement
+case class Minus(left: Statement, right: Statement) extends Statement
+case class Times(left: Statement, right: Statement) extends Statement
+case class Div(left: Statement, right: Statement) extends Statement
+case class Mod(left: Statement, right: Statement) extends Statement
 
-case class Variable(variable:String) extends Expr
-case class Assignment(left:Variable, right:Expr) extends Expr
-case class Conditional(guard:Expr, ifBranch:Expr, elseBranch:Option[Expr]=None) extends Expr
-case class Loop(guard:Expr, body:Expr) extends Expr
-case class Block(expressions:Expr*) extends Expr
+case class Variable(variable:String) extends Statement
+case class Assignment(left:Variable, right:Statement) extends Statement
+case class Conditional(guard:Statement, ifBranch:Statement, elseBranch:Option[Statement]=None) extends Statement
+case class Loop(guard:Statement, body:Statement) extends Statement
+case class Block(expressions:Statement*) extends Statement

@@ -6,7 +6,7 @@ import ast._
 object CombinatorParser extends JavaTokenParsers {
 
   /** expr ::= term { { "+" | "-" } term }* */
-  def expr: Parser[Expr] =
+  def expr: Parser[Statement] =
     term ~! opt(("+" | "-") ~ term) ^^ {
       case l ~ None => l
       case l ~ Some("+" ~ r) => Plus(l, r)
@@ -14,7 +14,7 @@ object CombinatorParser extends JavaTokenParsers {
     }
 
   /** term ::= factor { { "*" | "/" | "%" } factor }* */
-  def term: Parser[Expr] =
+  def term: Parser[Statement] =
     factor ~! opt(("*" | "/" | "%") ~ factor) ^^ {
       case l ~ None => l
       case l ~ Some("*" ~ r) => Times(l, r)
@@ -23,7 +23,7 @@ object CombinatorParser extends JavaTokenParsers {
     }
 
   /** factor ::= numericLit | "+" factor | "-" factor | "(" expr ")" */
-  def factor: Parser[Expr] = (
+  def factor: Parser[Statement] = (
     ident ^^ { case i => Variable(i)}
   |    wholeNumber ^^ { case s => Constant(s.toInt) }
   | "+" ~> factor ^^ { case e => e }
@@ -32,32 +32,32 @@ object CombinatorParser extends JavaTokenParsers {
   )
 
   /** statements ::= statement* */
-  def statements: Parser[List[Expr]] = rep(statement)
+  def statements: Parser[List[Statement]] = rep(statement)
 
   /** statement   ::= expression ";" | assignment | conditional | loop | block */
-  def statement: Parser[Expr] = expr <~ ";" | assignment | conditional | loop | block
+  def statement: Parser[Statement] = expr <~ ";" | assignment | conditional | loop | block
 
   /** assignment  ::= ident "=" expression ";" */
-  def assignment: Parser[Expr] =
+  def assignment: Parser[Statement] =
     ident ~ "=" ~ expr ~ ";" ^^ {
       case i ~ "=" ~ e ~ ";"  => Assignment(Variable(i), e)
     }
 
   /** conditional ::= "if" "(" expression ")" block [ "else" block ] */
-  def conditional: Parser[Expr] =
+  def conditional: Parser[Statement] =
     "if" ~ "(" ~> expr ~ ")" ~ block ~ opt( "else" ~ block ) ^^ {
       case  guard ~ _ ~ ifBranch ~ None => Conditional(guard, ifBranch)
       case  guard ~ _ ~ ifBranch ~ Some(_ ~ elseBranch) => Conditional(guard, ifBranch, Some(elseBranch))
     }
 
   /** loop ::= "while" "(" expression ")" block */
-  def loop: Parser[Expr] =
+  def loop: Parser[Statement] =
     "while" ~ "(" ~> expr ~ ")" ~ block ^^ {
       case  guard ~ _ ~ body => Loop(guard, body)
     }
 
   /** block ::= "{" statement* "}" */
-  def block: Parser[Expr] =
+  def block: Parser[Statement] =
     "{" ~ rep(statement) ~ "}" ^^ {
       case _ ~ statements ~ _ => Block(statements:_*)
     }
