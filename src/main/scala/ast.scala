@@ -15,3 +15,5 @@ case class Assignment(left:Variable, right:Statement) extends Statement
 case class Conditional(guard:Statement, ifBranch:Statement, elseBranch:Option[Statement]=None) extends Statement
 case class Loop(guard:Statement, body:Statement) extends Statement
 case class Block(expressions:Statement*) extends Statement
+case class Struct(struct:Map[String, Statement])extends Statement
+case class Select(root: Statement, selectors:Variable*) extends Statement

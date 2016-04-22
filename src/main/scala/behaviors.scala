@@ -123,6 +123,8 @@ object behaviors {
     result.toString
   }
 
+  //def buildStructString(prefix:String,)
+
   val EOL = scala.util.Properties.lineSeparator
   val INDENT = "  "
 }
