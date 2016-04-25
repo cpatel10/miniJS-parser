@@ -11,7 +11,7 @@ case class Div(left: Statement, right: Statement) extends Statement
 case class Mod(left: Statement, right: Statement) extends Statement
 
 case class Variable(variable:String) extends Statement
-case class Assignment(left:Variable, right:Statement) extends Statement
+case class Assignment(right:Statement, left:Variable*) extends Statement
 case class Conditional(guard:Statement, ifBranch:Statement, elseBranch:Option[Statement]=None) extends Statement
 case class Loop(guard:Statement, body:Statement) extends Statement
 case class Block(expressions:Statement*) extends Statement

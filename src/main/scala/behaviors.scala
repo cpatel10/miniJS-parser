@@ -44,7 +44,7 @@ object behaviors {
     case Mod(l, r)   => buildExprString(prefix, "%", toFormattedString(prefix)(l), toFormattedString(prefix)(r))
 
     case Variable(i) => i
-    case Assignment(l, r) => buildAssignmentString(prefix, "=", toFormattedString(prefix)(l), toFormattedString(prefix)(r))
+    case Assignment(r, l) => buildAssignmentString(prefix, "=", toFormattedString(prefix)(l), toFormattedString(prefix)(r))
     case Conditional(guard, ifBranch, elseBranch) => buildConditionalString(prefix, "if", guard, ifBranch, elseBranch:Option[Statement])
     case Loop(guard, body) => buildLoopString(prefix, "while", toFormattedString(prefix)(guard), toFormattedString(prefix)(body))
     case Block(expressions@_*) => buildBlockString(prefix, expressions: _*)

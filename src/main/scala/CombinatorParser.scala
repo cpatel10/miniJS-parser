@@ -1,6 +1,7 @@
 package edu.luc.cs.laufer.cs473.expressions
 
 import scala.util.parsing.combinator.JavaTokenParsers
+import scala.collection.mutable
 import ast._
 
 object CombinatorParser extends JavaTokenParsers {
@@ -22,13 +23,22 @@ object CombinatorParser extends JavaTokenParsers {
       case l ~ Some("%" ~ r) => Mod(l, r)
     }
 
-  /** factor ::= numericLit | "+" factor | "-" factor | "(" expr ")" */
+  /** factor ::= simplefactor { "." ident }* */
   def factor: Parser[Statement] = (
+    simplefactor
+    | simplefactor ~ "." ~ repsep(ident, ".") ^^ {
+      case root ~ "." ~ selectors => Select(root, selectors.map(Variable(_)):_*)
+    }
+    )
+
+  /** simplefactor ::= numericLit | "+" factor | "-" factor | "(" expr ")" | struct */
+  def simplefactor: Parser[Statement] = (
     ident ^^ { case i => Variable(i)}
-  |    wholeNumber ^^ { case s => Constant(s.toInt) }
+  | wholeNumber ^^ { case s => Constant(s.toInt) }
   | "+" ~> factor ^^ { case e => e }
   | "-" ~> factor ^^ { case e => UMinus(e) }
   | "(" ~ expr ~ ")" ^^ { case _ ~ e ~ _ => e }
+  | struct ^^ {case s => s}
   )
 
   /** statements ::= statement* */
@@ -37,10 +47,10 @@ object CombinatorParser extends JavaTokenParsers {
   /** statement   ::= expression ";" | assignment | conditional | loop | block */
   def statement: Parser[Statement] = expr <~ ";" | assignment | conditional | loop | block
 
-  /** assignment  ::= ident "=" expression ";" */
+  /** assignment  ::= ident { "." ident }* "=" expression ";" */
   def assignment: Parser[Statement] =
-    ident ~ "=" ~ expr ~ ";" ^^ {
-      case i ~ "=" ~ e ~ ";"  => Assignment(Variable(i), e)
+    repsep(ident, ".") ~ "=" ~ expr ~ ";" ^^ {
+      case i ~ "=" ~ e ~ ";"  => Assignment(e, i.map(Variable(_)):_*)
     }
 
   /** conditional ::= "if" "(" expression ")" block [ "else" block ] */
@@ -60,6 +70,21 @@ object CombinatorParser extends JavaTokenParsers {
   def block: Parser[Statement] =
     "{" ~ rep(statement) ~ "}" ^^ {
       case _ ~ statements ~ _ => Block(statements:_*)
+    }
+
+  /** struct ::= "{" "}" | "{" field { "," field }* "}" */
+  def struct: Parser[Statement] =
+    "{" ~> repsep(field, ",") <~ "}" ^^ {
+      case fields => {
+        val map = fields.map(f => f.asInstanceOf[Assignment].left(0).variable -> f.asInstanceOf[Assignment].right)(collection.breakOut): Map[String, Statement]
+        Struct(map)
+      }
+    }
+
+  /** field ::= ident ":" expr */
+  def field: Parser[Statement] =
+    ident ~ ":" ~ expr ^^ {
+      case i ~ ":" ~ e => Assignment(e, Variable(i))
     }
 
 }

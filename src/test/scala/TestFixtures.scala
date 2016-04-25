@@ -47,8 +47,8 @@ object TestFixtures {
   val simpleAssignmentString = "x = y;"
 
   val simpleAssignment = Assignment(
-    Variable("x"),
-    Variable("y")
+    Variable("y"),
+    Variable("x")
     //Constant(5)
   );
 
@@ -57,12 +57,12 @@ object TestFixtures {
   val simpleStatementList =
     List(
       Assignment(
-        Variable("x"),
-        Constant(5)
+        Constant(5),
+        Variable("x")
       ),
       Assignment(
-        Variable("y"),
-        Constant(7)
+        Constant(7),
+        Variable("y")
       )
     )
 
@@ -87,7 +87,6 @@ object TestFixtures {
 
   val complexAssignment2 =
     Assignment(
-      Variable("x"),
       Div(
         Minus(
           Plus(
@@ -100,7 +99,8 @@ object TestFixtures {
           )
         ),
         Constant(5)
-      )
+      ),
+      Variable("x")
     )
 
   val simpleConditionalString = "if (1) { x = 2; }"
@@ -110,8 +110,8 @@ object TestFixtures {
       Constant(1),
       Block(
         Assignment(
-          Variable("x"),
-          Constant(2)
+          Constant(2),
+          Variable("x")
         )
       )
     )
@@ -123,14 +123,15 @@ object TestFixtures {
       Constant(1),
       Block(
         Assignment(
-          Variable("x"),
-          Constant(2)
+          Constant(2),
+          Variable("x")
         )
       ),
       Some(Block(
         Assignment(
-          Variable("x"),
-          Constant(3)
+          Constant(3),
+          Variable("x")
+
         )
       ))
     )
@@ -140,18 +141,18 @@ object TestFixtures {
   val blockFixture =
     Block(
       Assignment(
-        Variable("r"),
         Plus(
           Variable("r"),
           Variable("x")
-        )
+        ),
+        Variable("r")
       ),
       Assignment(
-        Variable("y"),
         Plus(
           Variable("y"),
           Constant(1)
-        )
+        ),
+        Variable("y")
       )
     )
 
@@ -162,18 +163,18 @@ object TestFixtures {
       Constant(4),
       Block(
         Assignment(
-          Variable("r"),
           Plus(
             Variable("r"),
             Variable("x")
-          )
+          ),
+          Variable("r")
         ),
         Assignment(
-          Variable("y"),
           Plus(
             Variable("y"),
             Constant(1)
-          )
+          ),
+          Variable("y")
         )
       )
     )
@@ -187,18 +188,18 @@ object TestFixtures {
       Variable("y"),
       Block(
         Assignment(
-          Variable("r"),
           Plus(
             Variable("r"),
             Variable("x")
-          )
+          ),
+          Variable("r")
         ),
         Assignment(
-          Variable("y"),
           Minus(
             Variable("y"),
             Constant(1)
-          )
+          ),
+          Variable("y")
         )
       )
     )
@@ -209,36 +210,37 @@ object TestFixtures {
   val simpleWhile =
     Block(
       Assignment(
-        Variable("x"),
-        Constant(2)
+        Constant(2),
+        Variable("x")
+
 
       ),
       Assignment(
-        Variable("y"),
-        Constant(3)
+        Constant(3),
+        Variable("y")
 
       ),
       Assignment(
-        Variable("r"),
-        Constant(0)
+        Constant(0),
+        Variable("r")
 
       ),
       Loop(
         Variable("y"),
         Block(
           Assignment(
-            Variable("r"),
             Plus(
               Variable("r"),
               Variable("x")
-            )
+            ),
+            Variable("r")
           ),
           Assignment(
-            Variable("y"),
             Minus(
               Variable("y"),
               Constant(1)
-            )
+            ),
+            Variable("y")
           )
         )
       ))

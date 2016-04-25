@@ -64,7 +64,7 @@ object Evaluator {
       else throw new NoSuchFieldException(i)
     }
 
-    case Assignment(left, right) => {
+    case Assignment(right, left) => {
         val lvalue = Try(evaluate(store)(left)).getOrElse(Num(0))
         val rvalue = evaluate(store)(right)
         store(left.variable) = Cell(lvalue.set(rvalue.get))
