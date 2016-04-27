@@ -1,5 +1,8 @@
 package edu.luc.cs.laufer.cs473.expressions
 
+import scala.collection.mutable;
+
+
 object TestFixtures {
 
   import ast._
@@ -244,6 +247,60 @@ object TestFixtures {
           )
         )
       ))
+
+
+  val emptyStructAssignmentString=  "x={};"
+
+  val emptyStructAssignment =
+        Assignment(
+        Struct(Map[String, Statement]()),
+        Variable("x")
+      )
+
+
+  val simpleStructAssignmentString = "x={a:4};"
+
+  val simpleStructAssignment =
+
+      Assignment(
+        Struct(
+          Map[String, Statement]("a" -> Constant(4))
+        ),
+        Variable("x")
+      )
+
+
+  val complexStructAssignmentString = "x = {a: {b: 4}, c: 9};"
+
+  val complexStructAssignment=
+
+      Assignment(
+        Struct(
+          Map[String,Statement](
+          "a" -> Struct(
+          Map[String, Statement]("b" -> Constant (4))
+        ),
+          "c" -> Constant(9)
+        )
+       ) ,
+        Variable ("x")
+      )
+
+  val nestedStructAssignmentString = "x = {a:1, b:2, c:{d:1, e:2}};"
+  val nestedStructAssignment =
+
+      Assignment(
+        Struct(Map[String, Statement](
+          "a" -> Constant(1),
+          "b" -> Constant(2),
+          "c" -> Struct(Map[String, Statement](
+            "d" -> Constant(1),
+            "e" -> Constant(2)
+          ))
+        )),
+        Variable("x")
+
+    )
 
 
 }

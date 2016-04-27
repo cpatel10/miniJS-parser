@@ -44,10 +44,13 @@ object behaviors {
     case Mod(l, r)   => buildExprString(prefix, "%", toFormattedString(prefix)(l), toFormattedString(prefix)(r))
 
     case Variable(i) => i
-    case Assignment(r, l) => buildAssignmentString(prefix, "=", toFormattedString(prefix)(l), toFormattedString(prefix)(r))
+    case Assignment(r, l)                 => buildAssignmentString(prefix, "=", toFormattedString(prefix)(l), toFormattedString(prefix)(r))
     case Conditional(guard, ifBranch, elseBranch) => buildConditionalString(prefix, "if", guard, ifBranch, elseBranch:Option[Statement])
-    case Loop(guard, body) => buildLoopString(prefix, "while", toFormattedString(prefix)(guard), toFormattedString(prefix)(body))
-    case Block(expressions@_*) => buildBlockString(prefix, expressions: _*)
+    case Loop(guard, body)                 => buildLoopString(prefix, "while", toFormattedString(prefix)(guard), toFormattedString(prefix)(body))
+    case Block(expressions@_*)              => buildBlockString(prefix, expressions: _*)
+
+    case Select(root, selectors @ _*)       => buildSelectString(prefix, "Select", root, selectors:_*)
+    case Struct(s)                          => buildStructString(prefix, "Struct", s)
   }
 
   def toFormattedString(e: Statement): String = toFormattedString("")(e)
@@ -123,7 +126,26 @@ object behaviors {
     result.toString
   }
 
-  //def buildStructString(prefix:String,)
+  def buildStructString(prefix: String, nodeString: String, fields: Map[String, Statement]) = {
+    val result = new StringBuilder().append("{").append(EOL)
+    val fieldsString = fields.map {
+      case (i, e) => toFormattedString(prefix + INDENT)( Assignment(e, Variable(i)))}.mkString(",")
+    result.append(fieldsString)
+    result.append(prefix + INDENT + "}")
+    result.toString
+  }
+
+  def buildSelectString(prefix: String, nodeString: String, root: Statement, selectors: Variable*) = {
+    val result = new StringBuilder()
+    result.append(prefix)
+    result.append(nodeString)
+    result.append("(")
+    result.append(toFormattedString("")(root))
+    result.append(".")
+    result.append(selectors.map((el: Variable) => toFormattedString("")(el)).mkString("."))
+    result.append(")")
+    result.toString
+  }
 
   val EOL = scala.util.Properties.lineSeparator
   val INDENT = "  "
