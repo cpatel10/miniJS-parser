@@ -44,12 +44,15 @@ object behaviors {
     case Mod(l, r)   => buildExprString(prefix, "%", toFormattedString(prefix)(l), toFormattedString(prefix)(r))
 
     case Variable(i) => i
-    case Assignment(r, l)                 => buildAssignmentString(prefix, "=", toFormattedString(prefix)(l), toFormattedString(prefix)(r))
-    case Conditional(guard, ifBranch, elseBranch) => buildConditionalString(prefix, "if", guard, ifBranch, elseBranch:Option[Statement])
+    case Assignment(r, l @ _*)                 => l match {
+      case head +: Nil => buildAssignmentString(prefix, "=", toFormattedString(prefix)(head), toFormattedString(prefix)(r))
+      case head +: tail => buildAssignmentString(prefix, "=", toFormattedString(prefix)(Select(head, tail:_*)), toFormattedString(prefix)(r))
+    }
+      case Conditional(guard, ifBranch, elseBranch) => buildConditionalString(prefix, "if", guard, ifBranch, elseBranch:Option[Statement])
     case Loop(guard, body)                 => buildLoopString(prefix, "while", toFormattedString(prefix)(guard), toFormattedString(prefix)(body))
     case Block(expressions@_*)              => buildBlockString(prefix, expressions: _*)
 
-    case Select(root, selectors @ _*)       => buildSelectString(prefix, "Select", root, selectors:_*)
+    case Select(root, selectors@ _*)       => buildSelectString(prefix, "Select", root, selectors:_*)
     case Struct(s)                          => buildStructString(prefix, "Struct", s)
   }
 
@@ -136,13 +139,10 @@ object behaviors {
   }
 
   def buildSelectString(prefix: String, nodeString: String, root: Statement, selectors: Variable*) = {
-    val result = new StringBuilder()
-    result.append(prefix)
-    result.append(nodeString)
-    result.append("(")
+    val result = new StringBuilder(prefix).append("(")
     result.append(toFormattedString("")(root))
     result.append(".")
-    result.append(selectors.map((el: Variable) => toFormattedString("")(el)).mkString("."))
+    result.append(selectors.map((i: Variable) => toFormattedString(i)).mkString("."))
     result.append(")")
     result.toString
   }

@@ -1,5 +1,7 @@
 package edu.luc.cs.laufer.cs473.expressions
 
+import edu.luc.cs.laufer.cs473.expressions.ast.Statement
+
 import scala.util.parsing.combinator.JavaTokenParsers
 import scala.collection.mutable
 import ast._
@@ -49,6 +51,9 @@ object CombinatorParser extends JavaTokenParsers {
   def assignment: Parser[Statement] =
     repsep(ident, ".") ~ "=" ~ expr ~ ";" ^^ {
       case i ~ "=" ~ e ~ ";"  => Assignment(e, i.map(Variable(_)):_*)
+        
+
+
     }
 
   /** conditional ::= "if" "(" expression ")" block [ "else" block ] */

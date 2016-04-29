@@ -65,10 +65,10 @@ object Evaluator {
     }
 
     case Assignment(right, left) => {
-        val lvalue = Try(evaluate(store)(left)).getOrElse(Num(0))
-        val rvalue = evaluate(store)(right)
-        store(left.variable) = Cell(lvalue.set(rvalue.get))
-        Cell.NULL.get
+      val lvalue = Try(evaluate(store)(left)).getOrElse(Num(0))
+      val rvalue = evaluate(store)(right)
+      store(left.variable) = Cell(lvalue.set(rvalue.get))
+      Cell.NULL.get
 
     }
 
@@ -95,9 +95,7 @@ object Evaluator {
     }
 
     case Block(expressions @ _*) =>{
-       expressions.foldLeft(Cell.NULL.get.asInstanceOf[Value[Int]])((c: Value[Int], s: Statement) => evaluate(store)(s))
-   }
+      expressions.foldLeft(Cell.NULL.get.asInstanceOf[Value[Int]])((c: Value[Int], s: Statement) => evaluate(store)(s))
+    }
   }
 }
-
-
