@@ -30,7 +30,9 @@ class TestCombinatorParser extends FunSuite {
   val parsedExpr15 = CombinatorParser.parseAll(CombinatorParser.statement, simpleStructAssignmentString)
   val parsedExpr16 = CombinatorParser.parseAll(CombinatorParser.statement, complexStructAssignmentString)
   val parsedExpr17 = CombinatorParser.parseAll(CombinatorParser.statement, nestedStructAssignmentString)
-
+  val parsedExpr18 = CombinatorParser.parseAll(CombinatorParser.statement, simpleSelectStr)
+  val parsedExpr19 = CombinatorParser.parseAll(CombinatorParser.statement, selectWithStructStr)
+  val parsedExpr20 = CombinatorParser.parseAll(CombinatorParser.statement, complexSelectStr)
 
   test("parser works: complex1") { assert(parsedExpr.get === complex1) }
   test("parser works: complex2") { assert(parsedExpr2.get === complex1) }
@@ -49,5 +51,8 @@ class TestCombinatorParser extends FunSuite {
   test("parser works: simpleStructAssignment"){assert(parsedExpr15.get===simpleStructAssignment)}
   test("parser works: complexStructAssignment"){assert(parsedExpr16.get===complexStructAssignment)}
   test("parser works: nestedStructAssignment"){assert(parsedExpr17.get===nestedStructAssignment)}
+  test("parser works: simpleSelect"){assert(parsedExpr18.get===simpleSelect)}
+  test("parser works: selectWithStruct"){assert(parsedExpr19.get===selectWithStruct)}
+  test("parser works: complexSelect"){assert(parsedExpr20.get===complexSelect)}
 
 }

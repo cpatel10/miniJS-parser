@@ -24,12 +24,10 @@ object CombinatorParser extends JavaTokenParsers {
     }
 
   /** factor ::= simplefactor { "." ident }* */
-  def factor: Parser[Statement] = (
-    simplefactor
-    | simplefactor ~ "." ~ repsep(ident, ".") ^^ {
-      case root ~ "." ~ selectors => Select(root, selectors.map(Variable(_)):_*)
-    }
-    )
+  def factor: Parser[Statement] = simplefactor ~ opt("." ~ repsep(ident, ".")) ^^ {
+    case sf ~ None => sf
+    case sf ~ Some("." ~ list) => Select(sf, list.map(Variable(_)):_*)
+  }
 
   /** simplefactor ::= numericLit | "+" factor | "-" factor | "(" expr ")" | struct */
   def simplefactor: Parser[Statement] = (

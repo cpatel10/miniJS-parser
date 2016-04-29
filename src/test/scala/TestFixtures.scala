@@ -287,8 +287,8 @@ object TestFixtures {
       )
 
   val nestedStructAssignmentString = "x = {a:1, b:2, c:{d:1, e:2}};"
-  val nestedStructAssignment =
 
+  val nestedStructAssignment =
       Assignment(
         Struct(Map[String, Statement](
           "a" -> Constant(1),
@@ -302,5 +302,39 @@ object TestFixtures {
 
     )
 
+  val simpleSelectStr = "x.a;"
+
+  val simpleSelect =
+    Select(
+      Variable("x"),
+      Variable("a")
+    )
+
+  val selectWithStructStr = "{ a: 3 + 4, b: 5 + 6 }.a;"
+
+  val selectWithStruct =
+    Select(
+      Struct(Map(
+        "a" -> Plus(
+          Constant(3),
+          Constant(4)
+        ),
+        "b" -> Plus(
+          Constant(5),
+          Constant(6)
+        )
+      )),
+      Variable("a")
+    )
+
+  val complexSelectStr = "list.tail.tail.head;"
+
+  val complexSelect =
+    Select(
+      Variable("list"),
+      Variable("tail"),
+      Variable("tail"),
+      Variable("head")
+    )
 
 }
