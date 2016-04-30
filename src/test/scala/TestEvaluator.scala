@@ -62,14 +62,6 @@ class TestEvaluator extends FunSuite {
     assert(exception.getMessage === "r")
   }
 
-//  test("evaluate simpleWhile"){
-//    val result = Evaluator.evaluate(simpleWhile)
-//    assert(result == Success(Num(0)))
-//    assert(Evaluator.store.get("x").get === Cell(Num(2)))
-//    assert(Evaluator.store.get("y").get === Cell(Num(0)))
-//    assert(Evaluator.store.get("r").get === Cell(Num(6)))
-//  }
-
   test("evaluate works on complexStructWithAssign"){
     Evaluator.evaluate(complexStructWithAssign1)
     assert(Evaluator.store.get("x").get === complexStructWithAssign1Memory)
@@ -79,36 +71,12 @@ class TestEvaluator extends FunSuite {
     assert(Evaluator.store.get("x").get === complexStructWithAssign3Memory)
   }
 
-//  test("evaluate works on undefinedSelector") {
-//    val result = Evaluator.evaluate(undefinedSelect)
-//    val exception = intercept[java.lang.NoSuchFieldException] {
-//      result.get
-//    }
-//    assert(exception.getMessage === "a")
-//  }
-//
-//  test("evaluate works on undefinedFieldTryingToAssignValueToSelector") {
-//    val result = Evaluator.evaluate(undefinedFieldAssignValueToSelect)
-//    val exception = intercept[java.lang.NoSuchFieldException] {
-//      result.get
-//    }
-//    assert(exception.getMessage === "x")
-//  }
-
   test("evaluate works on AssignNumAsIns") {
     val result = Evaluator.evaluate(AssignNumAsIns)
     val thrown = intercept[java.lang.NoSuchFieldException] {
       result.get
     }
-    assert(thrown.getMessage === "y")
+    assert(thrown.getMessage === "b")
   }
-
-
-
-
-
-
-
-
 
 }

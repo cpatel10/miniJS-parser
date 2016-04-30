@@ -385,38 +385,14 @@ object TestFixtures {
       Variable("head")
     )
 
-  val undefinedSelectString = "x={}; x.a;"
 
-  val undefinedFieldAccessSelectString = "x.a;"
-
-  val undefinedFieldAssignValueToSelectString = "x.a = 3;"
-
-  val accessSelectNumAsInsString = "x={a:1}; x.a.b;"
-  val accessSelectNumAsIns =
-    Assignment(
-      Struct(
-        Map[String, Statement](
-          "a" -> Constant(1)
-        )
-      ),
-      Variable("x")
-    )
-  Select(
-    Variable("x"),
-    Variable("a"),
-    Variable("b")
-
-  )
-
-  val AssignToUndefinedSelectString = "x={a:{b:3}}; x.a.b.c.d = 4;"
-
-  val AssignNumAsInsString = "x={z:5}; x.z.y = 1; x.z.y;"
+  val AssignNumAsInsString = "x={a:5}; x.a.b = 1; x.a.b;"
   val AssignNumAsIns =
     Block(
      Assignment(
         Struct(
           Map[String, Statement](
-            "z" -> Constant(5)
+            "a" -> Constant(5)
           )
         ),
         Variable("x")
@@ -424,37 +400,15 @@ object TestFixtures {
       Assignment(
         Constant(1),
         Variable("x"),
-        Variable("z"),
-        Variable("y")
+        Variable("a"),
+        Variable("b")
       ),
       Select(
         Variable("x"),
-        Variable("z"),
-        Variable("y")
+        Variable("a"),
+        Variable("b")
       )
     )
-
-  val AssignValueToUndefinedSelectString = "x={z:3}; x.w = 3;"
-
-  AssignValueToUndefinedSelectString
-//    Block(
-//      Assignment(
-//        Struct(
-//          Map[String, Statement](
-//            "z" -> Constant(3)
-//          )
-//        ),
-//        Variable("x")
-//      ),
-//      Assignment(
-//        Constant(3),
-//        Variable("x"),
-//        Variable("w")
-//      )
-//    )
-
-
-
 
 
 }
