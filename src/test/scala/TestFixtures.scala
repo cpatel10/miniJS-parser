@@ -207,43 +207,39 @@ object TestFixtures {
       )
     )
 
-   val simpleWhileString= "x = 2; y = 3; r = 0; while (y) { r = r + x ; y = y - 1; }"
+   val simpleWhileString= "x = 2; y = 3; while (x) { y = y+x ; x = x - 1; }"
 
 
   val simpleWhile =
     Block(
       Assignment(
-        Constant(2),
+        Constant(10),
         Variable("x")
 
 
       ),
       Assignment(
-        Constant(3),
+        Constant(100),
         Variable("y")
 
-      ),
-      Assignment(
-        Constant(0),
-        Variable("r")
 
       ),
       Loop(
-        Variable("y"),
+        Variable("x"),
         Block(
           Assignment(
             Plus(
-              Variable("r"),
+              Variable("y"),
               Variable("x")
             ),
-            Variable("r")
+            Variable("y")
           ),
           Assignment(
             Minus(
-              Variable("y"),
+              Variable("x"),
               Constant(1)
             ),
-            Variable("y")
+            Variable("x")
           )
         )
       ))
@@ -302,6 +298,58 @@ object TestFixtures {
 
     )
 
+
+  val complexStructWithAssign1String= "x= {a:{b:4}, c:9};"
+  def complexStructWithAssign1Memory={
+    val c = Cell(Num(9))
+    val b = Cell(Num(4))
+    val a = Cell(Ins(mutable.Map[String, Cell[_]]("b" -> b).asInstanceOf[Evaluator.Store]))
+    val x = Cell(Ins(mutable.Map[String, Cell[_]]("a" -> a, "c" -> c).asInstanceOf[Evaluator.Store]))
+    x
+  }
+
+  val complexStructAssign1=
+    Assignment(
+      Struct(
+        Map[String, Statement](
+          "a" -> Struct(
+            Map[String, Statement](
+              "b" -> Constant(4)
+            )
+          ),
+          "d" -> Constant(9)
+        )
+
+      ),
+      Variable("x")
+    )
+
+  val complexStructWithAssign2String = "x= {a:{b:4}, c:9}; y =x;"
+  val complexStructWithAssign2Memory = complexStructWithAssign1Memory
+  val complexStructWithAssignment2 =
+     Assignment(
+        Variable("x"),
+        Variable("y")
+     )
+
+  val complexStructWithAssign3String = "x= {a:{b:4}, c:9}; y.a.b=6;"
+  val complexStructWithAssign3Memory = {
+    val Cell_x = complexStructWithAssign1Memory
+    val Cell_a = Cell_x.get.value.get("a").get
+    val Cell_b= Cell_a.get.asInstanceOf[Ins].value.get("b").get
+    Cell_b.set(Num(6))
+    Cell_x
+  }
+
+  val complexStructWithAssign3 =
+    Assignment(
+      Constant(4),
+      Variable("x"),
+      Variable("a"),
+      Variable("b")
+    )
+
+
   val simpleSelectStr = "x.a;"
 
   val simpleSelect =
@@ -336,5 +384,60 @@ object TestFixtures {
       Variable("tail"),
       Variable("head")
     )
+
+  val undefinedSelectString = "x={}; x.a;"
+
+  val undefinedFieldAccessSelectString = "x.a;"
+
+  val undefinedFieldAssignValueToSelectString = "x.a = 3;"
+
+  val accessSelectNumAsInsString = "x={a:1}; x.a.b;"
+  val accessSelectNumAsIns =
+    Assignment(
+      Struct(
+        Map[String, Statement](
+          "a" -> Constant(1)
+        )
+      ),
+      Variable("x")
+    )
+  Select(
+    Variable("x"),
+    Variable("a"),
+    Variable("b")
+
+  )
+
+  val AssignToUndefinedSelectString = "x={a:{b:3}}; x.a.b.c.d = 4;"
+
+  val AssignNumAsInsString = "x={z:5}; x.z.y = 1; x.z.y;"
+  val AssignNumAsIns =
+    Block(
+     Assignment(
+        Struct(
+          Map[String, Statement](
+            "z" -> Constant(5)
+          )
+        ),
+        Variable("x")
+      ),
+      Assignment(
+        Constant(1),
+        Variable("x"),
+        Variable("z"),
+        Variable("y")
+      ),
+      Select(
+        Variable("x"),
+        Variable("z"),
+        Variable("y")
+      )
+    )
+
+  val AssignValueToUndefinedSelectorString = "x={z:3}; x.w = 3;"
+
+
+
+
 
 }

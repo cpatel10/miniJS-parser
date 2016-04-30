@@ -62,13 +62,23 @@ class TestEvaluator extends FunSuite {
     assert(exception.getMessage === "r")
   }
 
-  test("evaluate simpleWhile"){
-    val result = Evaluator.evaluate(simpleWhile)
-    assert(result == Success(Num(0)))
-    assert(Evaluator.store.get("x").get === Cell(Num(2)))
-    assert(Evaluator.store.get("y").get === Cell(Num(0)))
-    assert(Evaluator.store.get("r").get === Cell(Num(6)))
+//  test("evaluate simpleWhile"){
+//    val result = Evaluator.evaluate(simpleWhile)
+//    assert(result == Success(Num(0)))
+//    assert(Evaluator.store.get("x").get === Cell(Num(2)))
+//    assert(Evaluator.store.get("y").get === Cell(Num(0)))
+//    assert(Evaluator.store.get("r").get === Cell(Num(6)))
+//  }
+
+  test("evaluate works on complexStructWithAssign"){
+    Evaluator.evaluate(complexStructWithAssign1String)
+    assert(Evaluator.store.get("x").get === complexStructWithAssign1Memory)
+    Evaluator.evaluate(complexStructWithAssign2String)
+    assert(Evaluator.store.get("x").get === complexStructWithAssign2Memory)
+    Evaluator.evaluate(complexStructWithAssign3String)
+    assert(Evaluator.store.get("x").get === complexStructWithAssign3Memory)
   }
+
 
 
 }
