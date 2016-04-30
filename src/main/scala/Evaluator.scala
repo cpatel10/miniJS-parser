@@ -4,7 +4,7 @@ import edu.luc.cs.laufer.cs473.expressions.Evaluator.Store
 import edu.luc.cs.laufer.cs473.expressions.ast._
 
 import scala.collection.mutable
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 
 trait Value
@@ -77,12 +77,37 @@ object Evaluator {
       else throw new NoSuchFieldException(i)
     }
 
-    case Assignment(right, left) => {
-      val lvalue = Try(evaluate(store)(left)).getOrElse(Cell(Num(0)).asInstanceOf[Cell[Value]])
+    case Select(root, selectors @_*) => {
+      selectors.foldLeft(evaluate(store)(root))((cell: Cell[Value], selector: Variable) =>
+      cell.get match {
+        case Ins(obj) => Try(obj(selector.variable)).getOrElse(throw new NoSuchFieldException(selector.variable))
+        case Num(i) => throw new NoSuchFieldException(selector.variable)
+      })
+    }
+
+    case Assignment(right, left @_*) => {
       val rvalue = evaluate(store)(right)
-      store(left.variable) = lvalue.set(rvalue.get)
+      Try(evaluate(store)(Select(left.head, left.tail.dropRight(1):_*))) match {
+        case Success(cell) =>
+          if (left.tail.isEmpty) cell.set(rvalue.get)
+          else cell.get match {
+            case Ins(obj) => obj(left.last.variable) = rvalue
+            case Num(i) => throw new NoSuchFieldException(left.last.variable)
+          }
+        case Failure(exception: NoSuchFieldException) =>
+          if (left.tail.isEmpty) store(left.head.variable) = Cell(rvalue.get)
+          else throw exception
+        case Failure(exception) => throw exception
+      }
       Cell.NULL
 
+    }
+
+    case Struct(map) => {
+      map.foldLeft(Cell(Ins(mutable.Map[String, Cell[Value]]())))((cell, pair) => {
+        cell.get.value(pair._1) = evaluate(cell.get.value)(pair._2)
+        cell
+      }).asInstanceOf[Cell[Value]]
     }
 
     case Conditional(guard, ifBranch, elseBranch: Option[Statement]) => {

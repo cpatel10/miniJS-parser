@@ -63,12 +63,12 @@ class TestEvaluator extends FunSuite {
   }
 
   test("evaluate simpleWhile"){
-  val result = Evaluator.evaluate(simpleWhile)
-  assert(result == Success(Num(0)))
-  assert(Evaluator.store.get("x").get === Cell(Num(2)))
-  assert(Evaluator.store.get("y").get === Cell(Num(0)))
-  assert(Evaluator.store.get("r").get === Cell(Num(6)))
-}
+    val result = Evaluator.evaluate(simpleWhile)
+    assert(result == Success(Num(0)))
+    assert(Evaluator.store.get("x").get === Cell(Num(2)))
+    assert(Evaluator.store.get("y").get === Cell(Num(0)))
+    assert(Evaluator.store.get("r").get === Cell(Num(6)))
+  }
 
 
 }
