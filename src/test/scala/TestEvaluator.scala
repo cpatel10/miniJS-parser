@@ -71,13 +71,43 @@ class TestEvaluator extends FunSuite {
 //  }
 
   test("evaluate works on complexStructWithAssign"){
-    Evaluator.evaluate(complexStructWithAssign1String)
+    Evaluator.evaluate(complexStructWithAssign1)
     assert(Evaluator.store.get("x").get === complexStructWithAssign1Memory)
-    Evaluator.evaluate(complexStructWithAssign2String)
+    Evaluator.evaluate(complexStructWithAssign2)
     assert(Evaluator.store.get("x").get === complexStructWithAssign2Memory)
-    Evaluator.evaluate(complexStructWithAssign3String)
+    Evaluator.evaluate(complexStructWithAssign3)
     assert(Evaluator.store.get("x").get === complexStructWithAssign3Memory)
   }
+
+//  test("evaluate works on undefinedSelector") {
+//    val result = Evaluator.evaluate(undefinedSelect)
+//    val exception = intercept[java.lang.NoSuchFieldException] {
+//      result.get
+//    }
+//    assert(exception.getMessage === "a")
+//  }
+//
+//  test("evaluate works on undefinedFieldTryingToAssignValueToSelector") {
+//    val result = Evaluator.evaluate(undefinedFieldAssignValueToSelect)
+//    val exception = intercept[java.lang.NoSuchFieldException] {
+//      result.get
+//    }
+//    assert(exception.getMessage === "x")
+//  }
+
+  test("evaluate works on AssignNumAsIns") {
+    val result = Evaluator.evaluate(AssignNumAsIns)
+    val thrown = intercept[java.lang.NoSuchFieldException] {
+      result.get
+    }
+    assert(thrown.getMessage === "y")
+  }
+
+
+
+
+
+
 
 
 

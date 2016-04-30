@@ -308,7 +308,7 @@ object TestFixtures {
     x
   }
 
-  val complexStructAssign1=
+  val complexStructWithAssign1=
     Assignment(
       Struct(
         Map[String, Statement](
@@ -317,7 +317,7 @@ object TestFixtures {
               "b" -> Constant(4)
             )
           ),
-          "d" -> Constant(9)
+          "c" -> Constant(9)
         )
 
       ),
@@ -326,7 +326,7 @@ object TestFixtures {
 
   val complexStructWithAssign2String = "x= {a:{b:4}, c:9}; y =x;"
   val complexStructWithAssign2Memory = complexStructWithAssign1Memory
-  val complexStructWithAssignment2 =
+  val complexStructWithAssign2 =
      Assignment(
         Variable("x"),
         Variable("y")
@@ -343,7 +343,7 @@ object TestFixtures {
 
   val complexStructWithAssign3 =
     Assignment(
-      Constant(4),
+      Constant(6),
       Variable("x"),
       Variable("a"),
       Variable("b")
@@ -434,7 +434,24 @@ object TestFixtures {
       )
     )
 
-  val AssignValueToUndefinedSelectorString = "x={z:3}; x.w = 3;"
+  val AssignValueToUndefinedSelectString = "x={z:3}; x.w = 3;"
+
+  AssignValueToUndefinedSelectString
+//    Block(
+//      Assignment(
+//        Struct(
+//          Map[String, Statement](
+//            "z" -> Constant(3)
+//          )
+//        ),
+//        Variable("x")
+//      ),
+//      Assignment(
+//        Constant(3),
+//        Variable("x"),
+//        Variable("w")
+//      )
+//    )
 
 
 
